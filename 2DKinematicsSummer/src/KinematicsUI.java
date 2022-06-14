@@ -56,6 +56,9 @@ public class KinematicsUI {
 		enterAccelAngle.setBounds(accelAngleLabel.getX() + accelAngleLabel.getWidth() + DISTANCE, accelAngleLabel.getY(), 100, 40);
 		myFrame.add(enterAccelAngle);
 		
+		
+		
+		
 	}
 	
 	public static void main(String[] args) {
