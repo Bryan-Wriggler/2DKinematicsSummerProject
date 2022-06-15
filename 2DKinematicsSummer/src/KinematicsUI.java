@@ -1,39 +1,41 @@
 import java.awt.*;
+import java.util.ArrayList;
 
-public class KinematicsUI {
+public class KinematicsUI { //consider to turn this class into an object?
 	//possible fields needed for this UI
-	public static Frame myFrame = new Frame("2D Kinematics Animation UI"); //basic frame
-	public static Button getInfoButton = new Button("Get Required Information");
+	private Frame myFrame = new Frame("2D Kinematics Animation UI"); //basic frame
+	private Button getInfoButton = new Button("Get Required Information");
 	
-	public static TextField accelLabel = new TextField("Acceleration: "); //read only acceleration
-	public static TextField enterAccel = new TextField(); //enter acceleration
-	public static TextField accelAngleLabel = new TextField("Accelration's Angle (0 - 360): "); //read only label
-	public static TextField enterAccelAngle = new TextField(); //enter angle
+	private TextField accelLabel = new TextField("Acceleration: "); //read only acceleration
+	private TextField enterAccel = new TextField(); //enter acceleration *
+	private TextField accelAngleLabel = new TextField("Accelration's Angle (0 - 360): "); //read only label
+	private TextField enterAccelAngle = new TextField(); //enter angle *
 	
-	public static TextField veloLable = new TextField("Velocity: "); //read only velocity
-	public static TextField enterVelo = new TextField(); //enter velocity
-	public static TextField veloAngleLabel = new TextField("Velocity's Angle (0 - 360): "); //read only angle
-	public static TextField enterVeloAngle = new TextField(); //ener angle
+	private TextField veloLable = new TextField("Velocity: "); //read only velocity
+	private TextField enterVelo = new TextField(); //enter velocity *
+	private TextField veloAngleLabel = new TextField("Velocity's Angle (0 - 360): "); //read only angle
+	private TextField enterVeloAngle = new TextField(); //ener angle *
 	
-	public static TextField xPosLabel = new TextField("X Position: "); //read only xPos label
-	public static TextField enterxPos = new TextField(); //enter xPos
-	public static TextField yPosLabel = new TextField("Y Position: "); //read only yPos label
-	public static TextField enteryPose= new TextField(); //enter yPose
+	private TextField xPosLabel = new TextField("X Position: "); //read only xPos label
+	private TextField enterxPos = new TextField(); //enter xPos *
+	private TextField yPosLabel = new TextField("Y Position: "); //read only yPos label
+	private TextField enteryPos= new TextField(); //enter yPos *
 	
-	//Action listener
-	public static Listener listener = new Listener();
+	//Action listener, and required values
+	private TextField[] inputs = {enterAccel, enterAccelAngle, enterVelo, enterVeloAngle, enterxPos, enteryPos};
+	private Listener listener = new Listener(inputs);
 	
 	//some layout constants
-	public static final int BOUND = 30;
-	public static final int DISTANCE = 15;
+	private final int BOUND = 30;
+	private final int DISTANCE = 15;
 	
 	
 	/**
 	 * To build the frame up, with these components above inside
 	 */
-	public static void buildUI() {
+	public void buildUI() {
 		//set frame
-		myFrame.setSize(500, 700); //width 400, height 900
+		myFrame.setSize(400, 500); //width 400, height 900
 		myFrame.setVisible(true); //show it
 		myFrame.addWindowListener(listener);
 		myFrame.setLayout(null);
@@ -57,11 +59,50 @@ public class KinematicsUI {
 		myFrame.add(enterAccelAngle);
 		
 		
+		//build textfields for velocity
+		veloLable.setBounds(i.left + 5 * BOUND + 20, accelAngleLabel.getY() + accelAngleLabel.getHeight() + DISTANCE, 70, 40);
+		myFrame.add(veloLable);
+		veloLable.setEditable(false); //another read only
+		enterVelo.setBounds(veloLable.getX() + veloLable.getWidth() + DISTANCE, veloLable.getY(), 100, 40);
+		myFrame.add(enterVelo);
+		
+		veloAngleLabel.setBounds(i.left + 2 * BOUND, veloLable.getY() + veloLable.getHeight() + DISTANCE, 180, 40);
+		myFrame.add(veloAngleLabel);
+		veloAngleLabel.setEditable(false); //read only
+		enterVeloAngle.setBounds(veloAngleLabel.getX() + veloAngleLabel.getWidth() + DISTANCE, veloAngleLabel.getY(), 100, 40);
+		myFrame.add(enterVeloAngle);
 		
 		
+		//the get position labels
+		xPosLabel.setBounds(i.left + BOUND, veloAngleLabel.getY() + veloAngleLabel.getHeight() + DISTANCE, 210, 40);
+		myFrame.add(xPosLabel);
+		xPosLabel.setEditable(false);
+		enterxPos.setBounds(xPosLabel.getX() + xPosLabel.getWidth() + DISTANCE, xPosLabel.getY(), 100, 40);
+		myFrame.add(enterxPos);
+		
+		yPosLabel.setBounds(i.left + BOUND, xPosLabel.getY() + xPosLabel.getHeight() + DISTANCE, 210, 40);
+		myFrame.add(yPosLabel);
+		yPosLabel.setEditable(false);
+		enteryPos.setBounds(yPosLabel.getX() + yPosLabel.getWidth() + DISTANCE, yPosLabel.getY(), 100, 40);
+		myFrame.add(enteryPos);
+		
+		
+		//button
+		getInfoButton.setBounds(200 - 90, yPosLabel.getY() + yPosLabel.getHeight() + DISTANCE, 180, 40);
+		myFrame.add(getInfoButton);
+		getInfoButton.addActionListener(listener); //add action listener, so when pressing button, it'll get info from textfields
 	}
 	
-	public static void main(String[] args) {
-		buildUI();
+	/**
+	 * @return -> get the user input (from listener)
+	 * 0 -> acceleration 
+	 * 1 -> acceleration's enter angle
+	 * 2 -> velocity
+	 * 3 -> velocity's enter angle
+	 * 4 -> x position in simulation
+	 * 5 -> y position in simulation
+	 */
+	public ArrayList<Double> getInputs() {
+		return listener.getInputs();
 	}
 }

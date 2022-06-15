@@ -1,8 +1,23 @@
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.*;
 
-public class Listener implements WindowListener {
+public class Listener implements WindowListener, ActionListener {
+	
+	//fields
+	private TextField[] listInput; //store the textfields that will get user input
+	private ArrayList<Double> inputs; //get the text after the button was pressed
+	
+	
+	//constructor
+	public Listener(TextField[] dataList) {
+		listInput = dataList;
+		inputs = new ArrayList<Double>();
+	}
+	
 	//Window Listener
 	@Override
 	public void windowActivated(WindowEvent arg0) {
@@ -50,5 +65,31 @@ public class Listener implements WindowListener {
 		// TODO Auto-generated method stub
 		System.out.println("Window Opened");
 		
+	}
+
+	
+	//Action Listener
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		Button button = (Button) arg0.getSource();
+		
+		//if there is one that's not boolean, then reset everything
+		boolean allDouble = true;
+		
+		for (int i=0; i<listInput.length; i++) { //get text from textfields, and plug into the inputs list
+			double get = Double.parseDouble(listInput[i].getText()); //this is assuming all inputs are just values
+			inputs.add(get);
+			
+			System.out.println(get);
+		}
+	}
+	
+	//other methods
+	/**
+	 * @return -> get all the needed inputs from user (after clicking the button)
+	 */
+	public ArrayList<Double> getInputs() {
+		return inputs;
 	}
 }
