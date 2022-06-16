@@ -29,7 +29,7 @@ public class KinematicsUI { //consider to turn this class into an object?
 	private final int BOUND = 30;
 	private final int DISTANCE = 15;
 	
-	
+	//methods in this class
 	/**
 	 * To build the frame up, with these components above inside
 	 */
@@ -104,5 +104,12 @@ public class KinematicsUI { //consider to turn this class into an object?
 	 */
 	public ArrayList<Double> getInputs() {
 		return listener.getInputs();
+	}
+	
+	/**
+	 * @return -> get the data state (also from listener)
+	 */
+	public boolean getDataState() {
+		return listener.getDataState();
 	}
 }

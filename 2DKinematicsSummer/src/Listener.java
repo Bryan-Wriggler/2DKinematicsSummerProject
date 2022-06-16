@@ -10,12 +10,14 @@ public class Listener implements WindowListener, ActionListener {
 	//fields
 	private TextField[] listInput; //store the textfields that will get user input
 	private ArrayList<Double> inputs; //get the text after the button was pressed
+	private boolean hasData; //this will only turn true when there is data (button pressed)
 	
 	
 	//constructor
 	public Listener(TextField[] dataList) {
 		listInput = dataList;
 		inputs = new ArrayList<Double>();
+		hasData = false;
 	}
 	
 	//Window Listener
@@ -80,9 +82,10 @@ public class Listener implements WindowListener, ActionListener {
 		for (int i=0; i<listInput.length; i++) { //get text from textfields, and plug into the inputs list
 			double get = Double.parseDouble(listInput[i].getText()); //this is assuming all inputs are just values
 			inputs.add(get);
-			
-			System.out.println(get);
 		}
+		
+		//here we got the data, turn it to true
+		hasData = true;
 	}
 	
 	//other methods
@@ -91,5 +94,12 @@ public class Listener implements WindowListener, ActionListener {
 	 */
 	public ArrayList<Double> getInputs() {
 		return inputs;
+	}
+	
+	/**
+	 * @return -> get if there is data
+	 */
+	public boolean getDataState() {
+		return hasData;
 	}
 }
