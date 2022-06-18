@@ -30,14 +30,14 @@ public class ClientProgram {
 			
 		};
 		
-		//schedule the task, and wait till ui has true data
-		timer.schedule(task, 3000, 3000);
+		//schedule the task, and wait till UI (listener class) has true data
+		timer.schedule(task, 1500, 1500);
 		
 		synchronized(test) { //wait until the result was fulfilled (the condition is true)
 			test.wait();
 		}
-		//re
 		
+		//read user input
 		System.out.println(uI.getInputs());
 		System.out.println(task.cancel()); //sea if the task will cancel after it
 		
