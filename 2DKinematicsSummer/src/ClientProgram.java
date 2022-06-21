@@ -1,6 +1,9 @@
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.JFrame;
+
+import AnimationUI.DisplayFrame;
 import junit.framework.Test;
 
 public class ClientProgram {
@@ -37,10 +40,10 @@ public class ClientProgram {
 			test.wait();
 		}
 		
-		//read user input
-		System.out.println(uI.getInputs());
-		System.out.println(task.cancel()); //sea if the task will cancel after it
-		
 		timer.cancel(); //cancel the timer
+		
+		//paint the actual animation
+		JFrame ex = new DisplayFrame(uI.getInputs());
+        ex.setVisible(true);
 	}
 }
