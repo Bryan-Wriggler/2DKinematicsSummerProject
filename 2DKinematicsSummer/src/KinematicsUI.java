@@ -16,9 +16,9 @@ public class KinematicsUI { //consider to turn this class into an object?
 	private TextField veloAngleLabel = new TextField("Velocity's Angle (0 - 360): "); //read only angle
 	private TextField enterVeloAngle = new TextField(); //ener angle *
 	
-	private TextField xPosLabel = new TextField("X Position: "); //read only xPos label
+	private TextField xPosLabel = new TextField("X Position (0 - 320): "); //read only xPos label
 	private TextField enterxPos = new TextField(); //enter xPos *
-	private TextField yPosLabel = new TextField("Y Position: "); //read only yPos label
+	private TextField yPosLabel = new TextField("Y Position (0 - 180): "); //read only yPos label
 	private TextField enteryPos= new TextField(); //enter yPos *
 	
 	//Action listener, and required values
@@ -74,13 +74,13 @@ public class KinematicsUI { //consider to turn this class into an object?
 		
 		
 		//the get position labels
-		xPosLabel.setBounds(i.left + BOUND, veloAngleLabel.getY() + veloAngleLabel.getHeight() + DISTANCE, 210, 40);
+		xPosLabel.setBounds(i.left + 3 * BOUND, veloAngleLabel.getY() + veloAngleLabel.getHeight() + DISTANCE, 150, 40);
 		myFrame.add(xPosLabel);
 		xPosLabel.setEditable(false);
 		enterxPos.setBounds(xPosLabel.getX() + xPosLabel.getWidth() + DISTANCE, xPosLabel.getY(), 100, 40);
 		myFrame.add(enterxPos);
 		
-		yPosLabel.setBounds(i.left + BOUND, xPosLabel.getY() + xPosLabel.getHeight() + DISTANCE, 210, 40);
+		yPosLabel.setBounds(i.left + 3 * BOUND, xPosLabel.getY() + xPosLabel.getHeight() + DISTANCE, 150, 40);
 		myFrame.add(yPosLabel);
 		yPosLabel.setEditable(false);
 		enteryPos.setBounds(yPosLabel.getX() + yPosLabel.getWidth() + DISTANCE, yPosLabel.getY(), 100, 40);
