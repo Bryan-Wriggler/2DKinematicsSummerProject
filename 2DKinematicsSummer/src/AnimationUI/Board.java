@@ -23,7 +23,7 @@ public class Board extends JPanel {
 	private static final int limitU = 0, limitB = actualHeight - 2 * ballRadius; //up and bottom limit (up starts from 0)
 	
 	//fields
-	private int x, y;
+	private double x, y;
 	
 	//for calculating the velocity and position (calculated through trig)
 	private double velocityX, velocityY;
@@ -41,14 +41,14 @@ public class Board extends JPanel {
 	public Board(double xPos, double yPos, double velocity, double velocityAngle, double accel, double accelAngle) {
 		//update velocity and acceleration (change meters to pixels)
 		accelX = xCalculate(accel, accelAngle) * meterToPixel;
-		accelY = yCalculate(accel, accelAngle) * meterToPixel;
+		accelY = - yCalculate(accel, accelAngle) * meterToPixel; //negative (due to computer and actual coordinate's difference)
 		
 		velocityX = xCalculate(velocity, velocityAngle) * meterToPixel;
-		velocityY = - yCalculate(velocity, velocityAngle) * meterToPixel; //cause computer use opposite coordinate, soe set as negative
+		velocityY = - yCalculate(velocity, velocityAngle) * meterToPixel; //negative 
 		
 		//set x and y
-		x = (int) xPos * meterToPixel + ballRadius;
-		y = (int) yPos * meterToPixel + ballRadius;
+		x = xPos * meterToPixel + ballRadius;
+		y = actualHeight - (yPos * meterToPixel + ballRadius); //change
 		
 		//initialize the board
 		initUI();
@@ -63,8 +63,6 @@ public class Board extends JPanel {
 		//create timer
 		Timer timer = new Timer();
 		timer.scheduleAtFixedRate(new ScheduleTask(), 1000, 20); //display after first second, and update every 10 ms
-		
-		System.out.println(velocityX + ", " + velocityY + ", " + accelX + ", " + accelY + ", " + x + ", " + y);
 	}
 	
 	/**
@@ -73,7 +71,7 @@ public class Board extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g); //called it in super
 		setForeground(Color.red);
-		g.fillOval(x, y, 2 * ballRadius, 2 * ballRadius);
+		g.fillOval((int) x, (int) y, 2 * ballRadius, 2 * ballRadius); //turn the position into integer
 	}
 	
 	/**
@@ -90,11 +88,19 @@ public class Board extends JPanel {
 				velocityY *= -1;
 			}
 			
+			//add acceleration to it
+			double newVeloX = velocityX + updateTime * accelX;
+			double newVeloY = velocityY + updateTime * accelY;
+			
 			//update x and y
-			x = (int) (x + velocityX * updateTime);
-			y = (int) (y + velocityY * updateTime);
+			x = (x + (velocityX + newVeloX) * updateTime / 2);
+			y = (y + (velocityY + newVeloY) * updateTime / 2);
 			
 			repaint();
+			
+			//update velocity
+			velocityX = newVeloX;
+			velocityY = newVeloY;
 		}
 		
 	};
