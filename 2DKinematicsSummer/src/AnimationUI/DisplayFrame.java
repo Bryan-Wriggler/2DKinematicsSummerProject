@@ -12,7 +12,7 @@ public class DisplayFrame extends JFrame {
 	
 	public void initUI(ArrayList<Double> inputs) {
 		//4: xPos, 5: yPos, 2: velo, 3: veloAngle, 0: accel, 1: accelAngle
-		add(new Board(inputs.get(4), inputs.get(5), inputs.get(2), inputs.get(3), inputs.get(0), inputs.get(1))); //add panel to frame
+		add(new Board(inputs.get(4), inputs.get(5), inputs.get(2), inputs.get(3), inputs.get(0), inputs.get(1), inputs.get(6))); //add panel to frame
 		
 		setResizable(false);
         pack();

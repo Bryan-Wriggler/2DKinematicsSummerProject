@@ -16,13 +16,17 @@ public class KinematicsUI { //consider to turn this class into an object?
 	private TextField veloAngleLabel = new TextField("Velocity's Angle (0 - 360): "); //read only angle
 	private TextField enterVeloAngle = new TextField(); //ener angle *
 	
-	private TextField xPosLabel = new TextField("X Position (0 - 80): "); //read only xPos label
+	private TextField xPosLabel = new TextField("X Position (0 - 16): "); //read only xPos label
 	private TextField enterxPos = new TextField(); //enter xPos *
-	private TextField yPosLabel = new TextField("Y Position (0 - 45): "); //read only yPos label
+	private TextField yPosLabel = new TextField("Y Position (0 - 9): "); //read only yPos label
 	private TextField enteryPos= new TextField(); //enter yPos *
 	
+	//new idea: the coefficient of restitution
+	private TextField restituteLabel = new TextField("Restitution Coefficient (0 - 1): "); //read only label
+	private TextField enterRestitute = new TextField(); //enter coefficient of restitution
+	
 	//Action listener, and required values
-	private TextField[] inputs = {enterAccel, enterAccelAngle, enterVelo, enterVeloAngle, enterxPos, enteryPos};
+	private TextField[] inputs = {enterAccel, enterAccelAngle, enterVelo, enterVeloAngle, enterxPos, enteryPos, enterRestitute};
 	private Listener listener = new Listener(inputs);
 	
 	//some layout constants
@@ -87,8 +91,16 @@ public class KinematicsUI { //consider to turn this class into an object?
 		myFrame.add(enteryPos);
 		
 		
+		//coefficient of restitution labels and enter
+		restituteLabel.setBounds(i.left + BOUND, yPosLabel.getY() + yPosLabel.getHeight() + DISTANCE, 210, 40);
+		myFrame.add(restituteLabel);
+		restituteLabel.setEditable(false);
+		enterRestitute.setBounds(restituteLabel.getX() + restituteLabel.getWidth() + DISTANCE, restituteLabel.getY(), 100, 40);
+		myFrame.add(enterRestitute);
+		
+		
 		//button
-		getInfoButton.setBounds(200 - 90, yPosLabel.getY() + yPosLabel.getHeight() + DISTANCE, 180, 40);
+		getInfoButton.setBounds(200 - 90, restituteLabel.getY() + restituteLabel.getHeight() + DISTANCE, 180, 40);
 		myFrame.add(getInfoButton);
 		getInfoButton.addActionListener(listener); //add action listener, so when pressing button, it'll get info from textfields
 	}

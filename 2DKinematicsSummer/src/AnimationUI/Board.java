@@ -14,7 +14,8 @@ public class Board extends JPanel {
 	private static final int actualHeight = 930;
 	private static final int actualWidth = 1630;
 	private static final int ballRadius = 15; //this is also the part that'll add onto the initial position of ball
-	private static final int meterToPixel = 20; //the ratio between actual meter and pixel in this project
+	private static final int meterToPixel = 100; //the ratio between actual meter and pixel in this project
+	private static final double veloError = 1;
 	
 	private static final double updateTime = 0.02; //10 ms
 	
@@ -27,7 +28,9 @@ public class Board extends JPanel {
 	
 	//for calculating the velocity and position (calculated through trig)
 	private double velocityX, velocityY;
+	private boolean xIs0, yIs0; //this will keep track if the velocity is permanently 0
 	private final double accelX, accelY; //this will stay as a constant (but different based on inputs)
+	private final double restituteC; //when it hits the wall, the velocity will decrease by this coefficient
 	
 	
 	/**
@@ -37,8 +40,9 @@ public class Board extends JPanel {
 	 * @param velocityAngle -> velocity's angle (from 0 to 360)
 	 * @param accel -> acceleration (as constant)
 	 * @param accelAngle -> acceleration's angle
+	 * @param restituteC -> coefficient of restitute
 	 */
-	public Board(double xPos, double yPos, double velocity, double velocityAngle, double accel, double accelAngle) {
+	public Board(double xPos, double yPos, double velocity, double velocityAngle, double accel, double accelAngle, double restituteC) {
 		//update velocity and acceleration (change meters to pixels)
 		accelX = xCalculate(accel, accelAngle) * meterToPixel;
 		accelY = - yCalculate(accel, accelAngle) * meterToPixel; //negative (due to computer and actual coordinate's difference)
@@ -46,9 +50,16 @@ public class Board extends JPanel {
 		velocityX = xCalculate(velocity, velocityAngle) * meterToPixel;
 		velocityY = - yCalculate(velocity, velocityAngle) * meterToPixel; //negative 
 		
+		//set iv velocity is 0 to false
+		xIs0 = false; 
+		yIs0 = false;
+		
 		//set x and y
-		x = xPos * meterToPixel + ballRadius;
-		y = actualHeight - (yPos * meterToPixel + ballRadius); //change
+		x = xPos * meterToPixel;
+		y = actualHeight - (yPos * meterToPixel) - 2 * ballRadius; //change
+		
+		//get coefficient of restitution
+		this.restituteC = restituteC;
 		
 		//initialize the board
 		initUI();
@@ -62,7 +73,7 @@ public class Board extends JPanel {
 		
 		//create timer
 		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(new ScheduleTask(), 1000, 20); //display after first second, and update every 10 ms
+		timer.scheduleAtFixedRate(new ScheduleTask(), 1000, 20); //display after first second, and update every 50 ms
 	}
 	
 	/**
@@ -82,15 +93,39 @@ public class Board extends JPanel {
 		@Override
 		public void run() {
 			if (x <= limitL || x >= limitR) { //it is currently out of x pos, reverse the x velocity
-				velocityX *= -1;
-			}
-			if (y <= limitU || y >= limitB) { //it is currently out of y pos, reverse the y velocity
-				velocityY *= -1;
+				velocityX *= - restituteC;
+				
+				//set it back into the bound, so it won't stuck after the velocity is under a certain range
+				x = (x <= limitL) ? limitL : limitR;
+				repaint();
+				
+				//if velocityX is under certain range at these position, then set it to 0
+				
+				if (Math.abs(velocityX) < veloError) {
+					velocityX = 0;
+					xIs0 = true;
+				}
+				
 			}
 			
-			//add acceleration to it
-			double newVeloX = velocityX + updateTime * accelX;
-			double newVeloY = velocityY + updateTime * accelY;
+			if (y <= limitU || y >= limitB) { //it is currently out of y pos, reverse the y velocity
+				velocityY *= - restituteC;
+				
+				y = (y <= limitU) ? limitU : limitB;
+				repaint();
+				
+				//if velocityY is under certain range at these position, then set to 0
+				
+				if (Math.abs(velocityY) < veloError) {
+					velocityY = 0;
+					yIs0 = true;
+				}
+				
+			}
+			
+			//add acceleration to it (find new velocity, but if it is already 0, keep it as 0
+			double newVeloX = (!xIs0) ? velocityX + updateTime * accelX : 0;
+			double newVeloY = (!yIs0) ? velocityY + updateTime * accelY : 0;
 			
 			//update x and y
 			x = (x + (velocityX + newVeloX) * updateTime / 2);
@@ -99,14 +134,13 @@ public class Board extends JPanel {
 			repaint();
 			
 			//update velocity
+			//to make it more realistic, when the velocity is under a certain range, set it to 0
 			velocityX = newVeloX;
 			velocityY = newVeloY;
 		}
 		
 	};
-	
-	
-	
+
 	
 	//helper methods
 	/**
